@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class HatController : MonoBehaviour
 {
     [SerializeField] private PlayerHatThrower m_HatThrower;
-    [SerializeField] float m_ThrowForce = 1000f, m_ThrowSpeed = 1000f, m_ThrowBackSpeed = 1000f, m_ThrowDistance = 10f;
+    [SerializeField] float m_ThrowForce = 1000f, m_ThrowSpeed = 5f, m_ThrowBackSpeed = 1000f, m_ThrowDistance = 10f;
+
+    public Transform endPosition;
+    public bool throwing = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +31,30 @@ public class HatController : MonoBehaviour
         {
             /* transform.position = m_HatThrower.transform.position;
             transform.rotation = m_HatThrower.transform.rotation; */
+           // UnParentHat();
+
+            if(transform.position == m_HatThrower.m_HatThrowPoint.transform.position)
+            {
+                throwing = true;
+            }
+            else if(transform.position == endPosition.position)
+            {
+                throwing = false;
+            }
+
+            if(throwing == true)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, endPosition.position, m_ThrowSpeed * Time.deltaTime);
+            }
+            else if(throwing == false)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, m_HatThrower.m_HatThrowPoint.transform.position, m_ThrowSpeed * Time.deltaTime);
+                if(transform.position == m_HatThrower.m_HatThrowPoint.transform.position)
+                {
+                    m_HatThrower.m_IsHatThrown = false;
+                    //ParentHat();
+                }
+            }
         }
     }
 
@@ -57,7 +85,7 @@ public class HatController : MonoBehaviour
         float t = 0;
         Vector3 startPosition = m_HatThrower.m_HatThrowPoint.transform.position;
         Vector3 endPosition = m_HatThrower.transform.position + new Vector3(0, 0, m_ThrowDistance);
-        while(t < 1)
+        while (t < 1)
         {
             t += Time.deltaTime * m_ThrowSpeed;
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
@@ -71,7 +99,7 @@ public class HatController : MonoBehaviour
         float t = 0;
         Vector3 startPosition = transform.position;
         Vector3 endPosition = m_HatThrower.transform.position;
-        while(t < 1)
+        while (t < 1)
         {
             t += Time.deltaTime * m_ThrowSpeed;
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
