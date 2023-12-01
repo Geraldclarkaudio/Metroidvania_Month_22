@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PlaygroundScenes/SB_TestScene.unity
     guid: 7d1715e29845a1648b7bab2663901a04
+  - enabled: 1
+    path: Assets/MetroidvaniaMovement/Editor/Scenes/Movement.unity
+    guid: db361b51a67119948ae2397cf6835f32
   m_configObjects: {}

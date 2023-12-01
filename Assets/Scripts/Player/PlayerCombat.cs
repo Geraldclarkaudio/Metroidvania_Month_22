@@ -9,6 +9,7 @@ public class PlayerCombat : MonoBehaviour
     
     [SerializeField]
     private GameObject visualEffect;
+    public PlayerHatThrower _playerHatThrower;
 
     private float _canAttack = -1f;
     private float _attackRate = 1.5f;
@@ -25,6 +26,7 @@ public class PlayerCombat : MonoBehaviour
             _playerAnimationManager.ChangeAnimationState(ATTACK_ANIM);
             _canAttack = Time.time + _attackRate;
             visualEffect.SetActive(true);
+            _playerHatThrower.ThrowHat();
             StartCoroutine(TurnOffVFX());
         }
     }
