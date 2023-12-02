@@ -50,11 +50,13 @@ public class HatController : MonoBehaviour
             }
             else if(throwing == false)
             {
-                transform.position = Vector3.MoveTowards(transform.position, m_HatThrower.m_HatThrowPoint.transform.position, m_ThrowSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(
+                    transform.position, m_HatThrower.m_HatThrowPoint.transform.position, 
+                    m_ThrowSpeed * Time.deltaTime * (transform.position - m_HatThrower.m_HatThrowPoint.transform.position).magnitude);
                 if(transform.position == m_HatThrower.m_HatThrowPoint.transform.position)
                 {
                     m_HatThrower.m_IsHatThrown = false;
-                    //ParentHat();
+                    ParentHat();
                 }
             }
         }
@@ -78,7 +80,9 @@ public class HatController : MonoBehaviour
 
     public void ParentHat()
     {
+        throwing = false;
         transform.parent = m_HatThrower.transform;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         transform.position = m_HatThrower.m_HatHeadPoint.transform.position;
     }
 
@@ -113,10 +117,11 @@ public class HatController : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         if(other.gameObject.tag == "Enemy")
         {
-            LerpHatBack();
+            throwing = false;            
+            //LerpHatBack();
         }
-        else if(other.gameObject.tag == "Player")
-        {
+        else if(other.gameObject.tag == "PlayerDamageBox" || other.gameObject.tag == "Player" || other.gameObject.tag == "PlayerHands")
+        {            
             ParentHat();
         }
     }
