@@ -18,12 +18,14 @@ public class HatController : MonoBehaviour
 
     public void SetThrowValues(float throwForce, float throwSpeed, float throwBackSpeed, float throwDistance)
     {
+        m_HatThrower = FindObjectOfType<PlayerHatThrower>();
         m_ThrowForce = throwForce;
         m_ThrowSpeed = throwSpeed;
         m_ThrowBackSpeed = throwBackSpeed;
         m_ThrowDistance = throwDistance;
-        m_EndPosition = m_HatThrower.m_HatEndPoint.transform;
-        
+        m_EndPosition = m_HatThrower.m_HatEndPoint.transform;        
+
+        throwing = true;
     }
 
     // Update is called once per frame
@@ -56,7 +58,8 @@ public class HatController : MonoBehaviour
                 if(transform.position == m_HatThrower.m_HatThrowPoint.transform.position)
                 {
                     m_HatThrower.m_IsHatThrown = false;
-                    ParentHat();
+                    gameObject.SetActive(false);
+                    GameObject.Destroy(gameObject);
                 }
             }
         }
@@ -76,6 +79,11 @@ public class HatController : MonoBehaviour
     public void UnParentHat()
     {
         transform.parent = null;
+    }
+
+    public void DestroyHat()
+    {
+        Destroy(gameObject);
     }
 
     public void ParentHat()
