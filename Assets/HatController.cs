@@ -8,7 +8,7 @@ public class HatController : MonoBehaviour
     [SerializeField] private PlayerHatThrower m_HatThrower;
     [SerializeField] float m_ThrowForce = 1000f, m_ThrowSpeed = 5f, m_ThrowBackSpeed = 1000f, m_ThrowDistance = 10f;
 
-    public Transform endPosition;
+    public Transform m_EndPosition;
     public bool throwing = false;
     // Start is called before the first frame update
     void Start()
@@ -22,6 +22,8 @@ public class HatController : MonoBehaviour
         m_ThrowSpeed = throwSpeed;
         m_ThrowBackSpeed = throwBackSpeed;
         m_ThrowDistance = throwDistance;
+        m_EndPosition = m_HatThrower.m_HatEndPoint.transform;
+        
     }
 
     // Update is called once per frame
@@ -37,22 +39,24 @@ public class HatController : MonoBehaviour
             {
                 throwing = true;
             }
-            else if(transform.position == endPosition.position)
+            else if(transform.position == m_EndPosition.position)
             {
                 throwing = false;
             }
 
             if(throwing == true)
             {
-                transform.position = Vector3.MoveTowards(transform.position, endPosition.position, m_ThrowSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, m_EndPosition.position, m_ThrowSpeed * Time.deltaTime);
             }
             else if(throwing == false)
             {
-                transform.position = Vector3.MoveTowards(transform.position, m_HatThrower.m_HatThrowPoint.transform.position, m_ThrowSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(
+                    transform.position, m_HatThrower.m_HatThrowPoint.transform.position, 
+                    m_ThrowSpeed * Time.deltaTime * (transform.position - m_HatThrower.m_HatThrowPoint.transform.position).magnitude);
                 if(transform.position == m_HatThrower.m_HatThrowPoint.transform.position)
                 {
                     m_HatThrower.m_IsHatThrown = false;
-                    //ParentHat();
+                    ParentHat();
                 }
             }
         }
@@ -76,7 +80,9 @@ public class HatController : MonoBehaviour
 
     public void ParentHat()
     {
+        throwing = false;
         transform.parent = m_HatThrower.transform;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         transform.position = m_HatThrower.m_HatHeadPoint.transform.position;
     }
 
@@ -88,7 +94,7 @@ public class HatController : MonoBehaviour
         while (t < 1)
         {
             t += Time.deltaTime * m_ThrowSpeed;
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            transform.position = Vector3.Lerp(startPosition, m_EndPosition.position, t);
             yield return null;
         }
         m_HatThrower.m_IsHatThrown = true;
@@ -106,5 +112,17 @@ public class HatController : MonoBehaviour
             yield return null;
         }
         m_HatThrower.m_IsHatThrown = false;
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.tag == "Enemy")
+        {
+            throwing = false;            
+            //LerpHatBack();
+        }
+        else if(other.gameObject.tag == "PlayerDamageBox" || other.gameObject.tag == "Player" || other.gameObject.tag == "PlayerHands")
+        {            
+            ParentHat();
+        }
     }
 }

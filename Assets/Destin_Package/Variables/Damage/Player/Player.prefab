@@ -452,6 +452,7 @@ MonoBehaviour:
   m_HatPrefab: {fileID: 7252269432496018543}
   m_HatThrowPoint: {fileID: 6667188189288677570}
   m_HatHeadPoint: {fileID: 3066628676274309376}
+  m_HatEndPoint: {fileID: 6156654278694073728}
   m_HatController: {fileID: 8009116845266679936}
   m_ThrowForce: 1000
   m_ThrowSpeed: 5
@@ -1033,7 +1034,7 @@ MonoBehaviour:
   m_HatThrower: {fileID: 8924762010969066005}
   m_ThrowForce: 1000
   m_ThrowSpeed: 5
-  m_ThrowBackSpeed: 1000
+  m_ThrowBackSpeed: 10000
   m_ThrowDistance: 10
   endPosition: {fileID: 7157711166278216446}
   throwing: 0
